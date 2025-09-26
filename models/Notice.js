@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const noticeSchema = new mongoose.Schema({
     Topic: {
@@ -24,6 +24,4 @@ const noticeSchema = new mongoose.Schema({
     timestamps: true 
 });
 
-const Notice = mongoose.model('Notice', noticeSchema);
-
-export default Notice;
+module.exports = mongoose.model('Notice', noticeSchema);
