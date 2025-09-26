@@ -13,7 +13,7 @@ const noticeSchema = new mongoose.Schema({
     Tag: {
         type: String,
         required: [true, "A tag is required."],
-        enum: ['New', 'Urgent', 'Important', 'Academic'] // Only these values are allowed
+        enum: ['New', 'Urgent', 'Important', 'Academic']
     },
     Link: {
         type: String,
@@ -21,7 +21,7 @@ const noticeSchema = new mongoose.Schema({
         default: ''
     }
 }, {
-    timestamps: true // This automatically adds `createdAt` and `updatedAt` fields
+    timestamps: true 
 });
 
 const Notice = mongoose.model('Notice', noticeSchema);
