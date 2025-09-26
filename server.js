@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
     'https://unisphere.tech', 
     'http://localhost:3000',
-    'https://uni-api-woad.vercel.app' // <-- REPLACE THIS WITH YOUR FRONTEND'S URL
+    'https://uni-api-woad.vercel.app'
+    'https://uni-api-woad.vercel.app/api/notices'// <-- REPLACE THIS WITH YOUR FRONTEND'S URL
 ];
 
 const corsOptions = {
@@ -46,5 +47,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server is listening on port: ${PORT}`);
 });
+
 
 
