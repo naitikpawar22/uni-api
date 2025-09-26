@@ -1,6 +1,7 @@
-[build]
-  command = "npm run build"
-  functions = "functions/"
+# File: netlify.toml
+
+[functions]
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
