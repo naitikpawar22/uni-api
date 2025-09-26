@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -6,44 +7,48 @@ import noticeRoutes from './routes/noticeRoutes.js';
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Add your live frontend URL to this list
+// --- CORS ---
 const allowedOrigins = [
-    'https://unisphere.tech', 
-    'http://localhost:3000',
-    'https://uni-api-woad.vercel.app' // <-- REPLACE THIS WITH YOUR FRONTEND'S URL
+  'https://unisphere.tech',
+  'http://localhost:3000',
+  'https://uni-api-woad.vercel.app' // replace with your actual frontend URL
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // allow server-to-server or same-origin calls (no origin header)
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
-const mongoUri = process.env.MONGO_URI;
-if (!mongoUri) {
-    console.error("FATAL ERROR: MONGO_URI is not defined.");
-    process.exit(1);
+// --- MongoDB (serverless-friendly) ---
+let isConnected = false;
+
+export async function connectDB() {
+  if (isConnected) return;
+  const mongoUri = process.env.MONGO_URI;
+  if (!mongoUri) {
+    throw new Error('FATAL ERROR: MONGO_URI is not defined.');
+  }
+  await mongoose.connect(mongoUri);
+  isConnected = true;
+  console.log('✅ MongoDB database connected successfully.');
 }
 
-mongoose.connect(mongoUri)
-    .then(() => console.log("✅ MongoDB database connected successfully."))
-    .catch(err => console.error("❌ MongoDB connection error:", err));
-
+// --- Routes ---
 app.use('/api/notices', noticeRoutes);
 
+// --- Root ---
 app.get('/', (req, res) => {
-    res.send('Unisphere Notice API is active.');
+  res.send('Unisphere Notice API is active.');
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server is listening on port: ${PORT}`);
-});
-
+export { app }; // export app for serverless handler
