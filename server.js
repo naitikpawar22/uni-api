@@ -8,15 +8,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Production CORS: Only allow your frontend domain and localhost for development.
-const allowedOrigins = ['https://unisphere.tech', 'http://localhost:3000'];
+// Production CORS: Add your new Vercel URL to this list
+const allowedOrigins = [
+    'https://unisphere.tech', 
+    'http://localhost:3000',
+    'https://uni-api-fawn.vercel.app' // <-- ADD THIS LINE
+];
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
+    return callback(null, true);
   }
 };
 app.use(cors(corsOptions));
