@@ -1,7 +1,6 @@
-import express from 'express';
-import Notice from '../models/Notice.js';
-
+const express = require('express');
 const router = express.Router();
+const Notice = require('../models/Notice.js');
 
 router.get('/', async (req, res) => {
     try {
@@ -25,7 +24,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const updatedNotice = await Notice.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!updatedNotice) return res.status(404).json({ message: "Notice not found." });
+        if (!updatedNotice) return res.status(440).json({ message: "Notice not found." });
         res.status(200).json({ message: 'Notice updated successfully!', notice: updatedNotice });
     } catch (error) {
         res.status(400).json({ message: "Failed to update notice", error: error.message });
@@ -42,4 +41,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;
