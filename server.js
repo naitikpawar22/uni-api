@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
     'https://unisphere.tech', 
     'http://localhost:3000',
-    'https://uni-api-zeta.vercel.app'
+    'https://uni-api-zeta.vercel.app/'
    
 ];
 
@@ -47,6 +47,7 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server is listening on port: ${PORT}`);
 });
+
 
 
 
