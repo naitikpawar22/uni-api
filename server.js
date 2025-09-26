@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -7,34 +6,38 @@ import noticeRoutes from './routes/noticeRoutes.js';
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Production CORS: Only allow your frontend domain and localhost for development.
+const allowedOrigins = ['https://unisphere.tech', 'http://localhost:3000'];
 const corsOptions = {
-  origin: 'https://unisphere.tech'
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 };
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// MongoDB connection (serverless-friendly)
-let isConnected = false; // track connection globally
-
-async function connectDB() {
-  if (isConnected) return;
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    isConnected = true;
-    console.log("✅ MongoDB connected successfully.");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-  }
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+    console.error("FATAL ERROR: MONGO_URI is not defined.");
+    process.exit(1);
 }
 
-// API Routes
+mongoose.connect(mongoUri)
+    .then(() => console.log("✅ MongoDB database connected successfully."))
+    .catch(err => console.error("❌ MongoDB connection error:", err));
+
 app.use('/api/notices', noticeRoutes);
 
-// Root Route
 app.get('/', (req, res) => {
-  res.send('Unisphere Notice API is active and running.');
+    res.send('Unisphere Notice API is active.');
 });
 
-export { app, connectDB }; // export app and connectDB
+app.listen(PORT, () => {
+    console.log(`🚀 Server is listening on port: ${PORT}`);
+});
