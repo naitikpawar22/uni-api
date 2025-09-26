@@ -7,16 +7,23 @@ import noticeRoutes from './routes/noticeRoutes.js';
 // --- Setup ---
 dotenv.config();
 const app = express();
+// Hosting services provide their own port, so we use `process.env.PORT`
 const PORT = process.env.PORT || 5000;
 
 // --- Middleware ---
-app.use(cors()); // Allows requests from other origins (like your React app)
-app.use(express.json()); // Allows the server to understand JSON data
+
+// Production CORS configuration: Only allow requests from your frontend domain
+const corsOptions = {
+  origin: 'https://unisphere.tech'
+};
+app.use(cors(corsOptions));
+
+app.use(express.json());
 
 // --- Database Connection ---
 const mongoUri = process.env.MONGO_URI;
 if (!mongoUri) {
-    console.error("FATAL ERROR: MONGO_URI is not defined in the .env file.");
+    console.error("FATAL ERROR: MONGO_URI is not defined.");
     process.exit(1);
 }
 
