@@ -1,27 +1,29 @@
+// File: models/Notice.js
+
 const mongoose = require('mongoose');
 
 const noticeSchema = new mongoose.Schema({
-    Topic: {
+    title: {
         type: String,
-        required: [true, "Topic is required."],
+        required: true,
         trim: true
     },
-    Notice: {
+    message: {
         type: String,
-        required: [true, "Notice content is required."],
+        required: true
     },
-    Tag: {
+    tag: {
         type: String,
-        required: [true, "A tag is required."],
-        enum: ['New', 'Urgent', 'Important', 'Academic']
+        default: 'New'
     },
-    Link: {
+    link: {
         type: String,
-        trim: true,
-        default: ''
+        trim: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
     }
-}, {
-    timestamps: true 
 });
 
 module.exports = mongoose.model('Notice', noticeSchema);
