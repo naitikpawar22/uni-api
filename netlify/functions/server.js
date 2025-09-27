@@ -10,8 +10,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // We need to change the path to the routes and models
-const noticeRoutes = require('../../routes/noticeRoutes.js');
-
+//const noticeRoutes = require('../../routes/noticeRoutes.js');
+const Student = require('../models/Student.js');
 const app = express();
 
 // Middleware
