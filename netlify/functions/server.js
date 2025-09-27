@@ -5,53 +5,31 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const serverless = require('serverless-http');
 const dotenv = require('dotenv');
-const path = require('path'); // for robust path resolution
 
-// Load environment variables from the project root .env file
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Load environment variables
+dotenv.config();
 
-// --- IMPORT ROUTES ---
+// We need to change the path to the routes and models
 const noticeRoutes = require('../../routes/noticeRoutes.js');
-const studentRoutes = require('../../routes/studentRoutes.js'); // login API
 
 const app = express();
 
-// --- MIDDLEWARE ---
+// Middleware
 app.use(cors());
-app.use(express.json()); // for parsing JSON requests
+app.use(express.json());
 
-// --- DATABASE CONNECTION ---
+// Database Connection
 const mongoUri = process.env.MONGO_URI;
+mongoose.connect(mongoUri)
+    .then(() => console.log("✅ MongoDB connected"))
+    .catch(err => console.error("❌ MongoDB connection error:", err));
 
-if (!mongoUri) {
-    console.error('❌ MONGO_URI is not defined. Make sure it is in your .env file or Netlify environment variables.');
-}
-
-mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log("✅ MongoDB connected"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
-
-// --- API ROUTES ---
+// API Routes
 const router = express.Router();
-
-// Test route
 router.get('/', (req, res) => res.json({ message: 'API is active' }));
-
-// Notices API
 router.use('/notices', noticeRoutes);
 
-// Student login API
-router.use('/students', studentRoutes);
-
-// Attach router to /api
 app.use('/api', router);
 
-// --- EXPORT HANDLER FOR NETLIFY ---
+// Export the handler for Netlify
 module.exports.handler = serverless(app);
-
-
-
-
