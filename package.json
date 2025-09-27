@@ -1,8 +1,7 @@
-
 {
   "name": "unisphere-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "netlify/functions/server.js",
   "scripts": {
     "start": "node netlify/functions/server.js"
   },
@@ -11,6 +10,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.4.1",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
   }
 }
